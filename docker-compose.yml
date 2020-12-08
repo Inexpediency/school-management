@@ -10,6 +10,8 @@ services:
     restart: unless-stopped
     networks: 
       - school-management
+    depends_on: 
+      - api-database
 
   api-database:
     container_name: api-database
