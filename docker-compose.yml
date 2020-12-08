@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  api:
+    build: ./api
+    container_name: api
+    command: npm run start
+    ports: 
+      - "3001:3001"
+    restart: unless-stopped
+    networks: 
+      - school-management
+
+  api-database:
+    container_name: api-database
+    image: mongo:latest
+    volumes:
+      - mongodb_api:/data/db
+    ports: 
+      - "27017:27017"
+    networks: 
+      - school-management
+
+volumes: 
+  mongodb_api:
+
+networks: 
+  school-management:
+    driver: bridge
