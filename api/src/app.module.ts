@@ -11,9 +11,7 @@ import { Lesson } from './lesson/entities/lesson.entity';
             url: 'mongodb://api-database/school',
             synchronize: true,
             useUnifiedTopology: true,
-            entities: [
-                Lesson
-            ],
+            entities: [Lesson],
         }),
         GraphQLModule.forRoot({
             autoSchemaFile: true,
