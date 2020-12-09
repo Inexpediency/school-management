@@ -5,12 +5,20 @@ import { Student } from './entities/student.entity';
 import { CreateStudentInput } from './inputs/create-student.input';
 import { v4 as uuid } from 'uuid';
 
-
 @Injectable()
 export class StudentService {
     constructor(
-        @InjectRepository(Student) private studentRepository: Repository<Student>,
+        @InjectRepository(Student)
+        private studentRepository: Repository<Student>,
     ) {}
+
+    getStudent(id: string): Promise<Student> {
+        return this.studentRepository.findOne({ id });
+    }
+
+    getStudents(): Promise<Student[]> {
+        return this.studentRepository.find();
+    }
 
     createStudent(createStudentInput: CreateStudentInput): Promise<Student> {
         const { firstName, lastName } = createStudentInput;
@@ -21,9 +29,5 @@ export class StudentService {
         });
 
         return this.studentRepository.save(student);
-    }
-
-    getStudents(): Promise<Student[]> {
-        return this.studentRepository.find();
     }
 }
