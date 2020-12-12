@@ -1,9 +1,9 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsUUID, MinLength } from 'class-validator';
 
 @InputType()
 export class DeleteStudentInput {
     @IsUUID()
-    @Field()
+    @Field((type) => ID)
     id: string;
 }

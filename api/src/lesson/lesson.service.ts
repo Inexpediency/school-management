@@ -8,6 +8,8 @@ import { AssignStudentsInput } from './inputs/assing-students.input';
 import { GetLessonInput } from './inputs/get-lesson.input';
 import { IdImpl } from 'src/student/interfaces/id.interface';
 import { DeleteLessonInput } from './inputs/delete-lesson.input';
+import { IdType } from 'src/student/types/id.type';
+import { UnassignStudentsInput } from './inputs/unassign-students.input';
 
 @Injectable()
 export class LessonService {
@@ -71,6 +73,19 @@ export class LessonService {
         }
 
         lesson.students = [...lesson.students, ...students];
+
+        return this.lessonRepository.save(lesson);
+    }
+
+    async unassignStudents(
+        unassignStudentsInput: UnassignStudentsInput,
+    ): Promise<Lesson> {
+        const { lessonId, studentsIds } = unassignStudentsInput;
+
+        const lesson = await this.lessonRepository.findOne({ id: lessonId });
+        lesson.students = lesson.students.filter(
+            (sId) => !studentsIds.includes(sId),
+        );
 
         return this.lessonRepository.save(lesson);
     }

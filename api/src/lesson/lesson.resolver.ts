@@ -15,6 +15,7 @@ import { AssignStudentsInput } from './inputs/assing-students.input';
 import { DeleteLessonInput } from './inputs/delete-lesson.input';
 import { GetLessonInput } from './inputs/get-lesson.input';
 import { CreateLessonInput } from './inputs/lesson.input';
+import { UnassignStudentsInput } from './inputs/unassign-students.input';
 import { LessonService } from './lesson.service';
 import { LessonType } from './types/lesson.type';
 
@@ -78,6 +79,20 @@ export class LessonResolver {
         );
 
         return this.lessonService.assignStudents(assingStudentsInput);
+    }
+
+    @Mutation((returns) => LessonType)
+    unassignStudents(
+        @Args('unassignStudentsInput')
+        unassignStudentsInput: UnassignStudentsInput,
+    ): Promise<Lesson> {
+        this.logger.log(
+            `Unassigning students to lesson with data: ${JSON.stringify(
+                unassignStudentsInput,
+            )}`,
+        );
+
+        return this.lessonService.unassignStudents(unassignStudentsInput);
     }
 
     @ResolveField()
