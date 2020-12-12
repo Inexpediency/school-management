@@ -4,7 +4,7 @@ import { Student } from './entities/student.entity';
 import { CreateStudentInput } from './inputs/create-student.input';
 import { DeleteStudentInput } from './inputs/delete-student.input';
 import { GetStudentInput } from './inputs/get-student.input';
-import { IdImpl } from './interfaces/id.dto';
+import { IdImpl } from './interfaces/id.interface';
 import { StudentService } from './student.service';
 import { IdType } from './types/id.type';
 import { StudentType } from './types/student.type';

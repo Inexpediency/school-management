@@ -6,6 +6,8 @@ import { v4 as uuid } from 'uuid';
 import { CreateLessonInput } from './inputs/lesson.input';
 import { AssignStudentsInput } from './inputs/assing-students.input';
 import { GetLessonInput } from './inputs/get-lesson.input';
+import { IdImpl } from 'src/student/interfaces/id.interface';
+import { DeleteLessonInput } from './inputs/delete-lesson.input';
 
 @Injectable()
 export class LessonService {
@@ -48,6 +50,12 @@ export class LessonService {
         }
 
         return this.lessonRepository.save(lesson);
+    }
+
+    deleteLesson(deleteLessonInput: DeleteLessonInput): IdImpl {
+        this.lessonRepository.delete({ id: deleteLessonInput.id });
+
+        return { id: deleteLessonInput.id } as IdImpl;
     }
 
     async assignStudents(

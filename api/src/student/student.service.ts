@@ -6,7 +6,7 @@ import { CreateStudentInput } from './inputs/create-student.input';
 import { v4 as uuid } from 'uuid';
 import { GetStudentInput } from './inputs/get-student.input';
 import { DeleteStudentInput } from './inputs/delete-student.input';
-import { IdImpl } from './interfaces/id.dto';
+import { IdImpl } from './interfaces/id.interface';
 
 @Injectable()
 export class StudentService {

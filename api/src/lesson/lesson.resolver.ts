@@ -7,9 +7,12 @@ import {
     ResolveField,
     Parent,
 } from '@nestjs/graphql';
+import { IdImpl } from 'src/student/interfaces/id.interface';
 import { StudentService } from 'src/student/student.service';
+import { IdType } from 'src/student/types/id.type';
 import { Lesson } from './entities/lesson.entity';
 import { AssignStudentsInput } from './inputs/assing-students.input';
+import { DeleteLessonInput } from './inputs/delete-lesson.input';
 import { GetLessonInput } from './inputs/get-lesson.input';
 import { CreateLessonInput } from './inputs/lesson.input';
 import { LessonService } from './lesson.service';
@@ -51,6 +54,17 @@ export class LessonResolver {
         );
 
         return this.lessonService.createLesson(createLessonInput);
+    }
+
+    @Mutation((returns) => IdType)
+    deleteLesson(
+        @Args('deleteLessonInput') deleteLessonInput: DeleteLessonInput,
+    ): IdImpl {
+        this.logger.log(
+            `Deleting lesson with data: ${JSON.stringify(deleteLessonInput)}`,
+        );
+
+        return this.lessonService.deleteLesson(deleteLessonInput);
     }
 
     @Mutation((returns) => LessonType)
