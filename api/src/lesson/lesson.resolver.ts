@@ -3,6 +3,7 @@ import { Student } from 'src/student/entities/student.entity';
 import { StudentService } from 'src/student/student.service';
 import { Lesson } from './entities/lesson.entity';
 import { AssignStudentsInput } from './inputs/assing-students.input';
+import { GetLessonInput } from './inputs/get-lesson.input';
 import { CreateLessonInput } from './inputs/lesson.input';
 import { LessonService } from './lesson.service';
 import { LessonType } from './types/lesson.type';
@@ -15,8 +16,8 @@ export class LessonResolver {
     ) {}
 
     @Query((returns) => LessonType)
-    lesson(@Args('id') id: string): Promise<Lesson> {
-        return this.lessonService.getLesson(id);
+    lesson(@Args('getLessonInput') getLessonInput: GetLessonInput): Promise<Lesson> {
+        return this.lessonService.getLesson(getLessonInput);
     }
 
     @Query((returns) => [LessonType])

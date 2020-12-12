@@ -5,6 +5,7 @@ import { Lesson } from './entities/lesson.entity';
 import { v4 as uuid } from 'uuid';
 import { CreateLessonInput } from './inputs/lesson.input';
 import { AssignStudentsInput } from './inputs/assing-students.input';
+import { GetLessonInput } from './inputs/get-lesson.input';
 
 @Injectable()
 export class LessonService {
@@ -12,8 +13,8 @@ export class LessonService {
         @InjectRepository(Lesson) private lessonRepository: Repository<Lesson>,
     ) {}
 
-    getLesson(id: string): Promise<Lesson> {
-        return this.lessonRepository.findOne({ id });
+    getLesson(getLessonInput: GetLessonInput): Promise<Lesson> {
+        return this.lessonRepository.findOne({ id: getLessonInput.id });
     }
 
     getLessons(): Promise<Array<Lesson>> {

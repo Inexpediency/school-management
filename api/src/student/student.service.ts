@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Student } from './entities/student.entity';
 import { CreateStudentInput } from './inputs/create-student.input';
 import { v4 as uuid } from 'uuid';
+import { GetStudentInput } from './inputs/get-student.input';
 
 @Injectable()
 export class StudentService {
@@ -12,8 +13,8 @@ export class StudentService {
         private studentRepository: Repository<Student>,
     ) {}
 
-    getStudent(id: string): Promise<Student> {
-        return this.studentRepository.findOne({ id });
+    getStudent(getStudentInput: GetStudentInput): Promise<Student> {
+        return this.studentRepository.findOne({ id: getStudentInput.id });
     }
 
     getStudents(): Promise<Student[]> {
