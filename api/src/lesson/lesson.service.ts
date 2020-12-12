@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Lesson } from './entities/lesson.entity';
@@ -13,15 +13,20 @@ export class LessonService {
         @InjectRepository(Lesson) private lessonRepository: Repository<Lesson>,
     ) {}
 
-    getLesson(getLessonInput: GetLessonInput): Promise<Lesson> {
-        return this.lessonRepository.findOne({ id: getLessonInput.id });
+    async getLesson(getLessonInput: GetLessonInput): Promise<Lesson> {
+        const lesson = await this.lessonRepository.findOne({ id: getLessonInput.id });
+        if (!lesson) {
+            throw new BadRequestException('No such Id in database');
+        }
+
+        return lesson; 
     }
 
     getLessons(): Promise<Array<Lesson>> {
         return this.lessonRepository.find();
     }
 
-    createLesson(createLessonInput: CreateLessonInput): Promise<Lesson> {
+    async createLesson(createLessonInput: CreateLessonInput): Promise<Lesson> {
         const { name, startDate, endDate, students } = createLessonInput;
         const lesson = this.lessonRepository.create({
             id: uuid(),
@@ -31,6 +36,18 @@ export class LessonService {
             students,
         });
 
+        const found = await this.findExist(lesson);
+        if (found) {
+            found.students = [
+                ...found.students,
+                ...students,
+            ];
+
+            await this.lessonRepository.update({ id: found.id }, found);
+
+            return found;
+        }
+
         return this.lessonRepository.save(lesson);
     }
 
@@ -38,11 +55,25 @@ export class LessonService {
         const { lessonId, studentsIds: students } = assignStudentsInput;
 
         const lesson = await this.lessonRepository.findOne({ id: lessonId });
+        if (!lesson) {
+            throw new BadRequestException('No lesson with such {id} in database')
+        }
+
         lesson.students = [
             ...lesson.students,
             ...students,
         ];
 
         return this.lessonRepository.save(lesson);
+    }
+
+    private async findExist(lesson: Lesson): Promise<Lesson> {
+        return this.lessonRepository.findOne({
+            where: {
+                name: lesson.name,
+                startDate: lesson.startDate,
+                endDate: lesson.endDate,
+            }
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Student } from './entities/student.entity';
@@ -13,15 +13,20 @@ export class StudentService {
         private studentRepository: Repository<Student>,
     ) {}
 
-    getStudent(getStudentInput: GetStudentInput): Promise<Student> {
-        return this.studentRepository.findOne({ id: getStudentInput.id });
+    async getStudent(getStudentInput: GetStudentInput): Promise<Student> {
+        const student = await this.studentRepository.findOne({ id: getStudentInput.id });
+        if (!student) {
+            throw new BadRequestException('No such ID in database');
+        }
+
+        return student; 
     }
 
     getStudents(): Promise<Student[]> {
         return this.studentRepository.find();
     }
 
-    createStudent(createStudentInput: CreateStudentInput): Promise<Student> {
+    async createStudent(createStudentInput: CreateStudentInput): Promise<Student> {
         const { firstName, lastName } = createStudentInput;
         const student = this.studentRepository.create({
             id: uuid(),
@@ -29,7 +34,9 @@ export class StudentService {
             lastName,
         });
 
-        return this.studentRepository.save(student);
+        const found = await this.findExist(student)
+
+        return !!found ? found : this.studentRepository.save(student) 
     }
 
     getManyStudents(studentIds: string[]): Promise<Student[]> {
@@ -38,6 +45,15 @@ export class StudentService {
                 id: {
                     $in: studentIds,
                 }
+            }
+        });
+    }
+
+    private async findExist(student: Student): Promise<Student> {
+        return this.studentRepository.findOne({
+            where: {
+                firstName: student.firstName,
+                lastName: student.lastName,
             }
         });
     }
