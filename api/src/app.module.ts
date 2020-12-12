@@ -19,7 +19,7 @@ import { ConfigService } from '@nestjs/config';
                 useUnifiedTopology: true,
                 entities: [Lesson, Student],
             }),
-            inject: [ConfigService], 
+            inject: [ConfigService],
         }),
         GraphQLModule.forRoot({
             autoSchemaFile: true,

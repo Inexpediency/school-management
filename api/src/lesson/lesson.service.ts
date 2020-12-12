@@ -14,12 +14,14 @@ export class LessonService {
     ) {}
 
     async getLesson(getLessonInput: GetLessonInput): Promise<Lesson> {
-        const lesson = await this.lessonRepository.findOne({ id: getLessonInput.id });
+        const lesson = await this.lessonRepository.findOne({
+            id: getLessonInput.id,
+        });
         if (!lesson) {
             throw new BadRequestException('No such Id in database');
         }
 
-        return lesson; 
+        return lesson;
     }
 
     getLessons(): Promise<Array<Lesson>> {
@@ -38,10 +40,7 @@ export class LessonService {
 
         const found = await this.findExist(lesson);
         if (found) {
-            found.students = [
-                ...found.students,
-                ...students,
-            ];
+            found.students = [...found.students, ...students];
 
             await this.lessonRepository.update({ id: found.id }, found);
 
@@ -51,18 +50,19 @@ export class LessonService {
         return this.lessonRepository.save(lesson);
     }
 
-    async assignStudents(assignStudentsInput: AssignStudentsInput): Promise<Lesson> {
+    async assignStudents(
+        assignStudentsInput: AssignStudentsInput,
+    ): Promise<Lesson> {
         const { lessonId, studentsIds: students } = assignStudentsInput;
 
         const lesson = await this.lessonRepository.findOne({ id: lessonId });
         if (!lesson) {
-            throw new BadRequestException('No lesson with such {id} in database')
+            throw new BadRequestException(
+                'No lesson with such {id} in database',
+            );
         }
 
-        lesson.students = [
-            ...lesson.students,
-            ...students,
-        ];
+        lesson.students = [...lesson.students, ...students];
 
         return this.lessonRepository.save(lesson);
     }
@@ -73,7 +73,7 @@ export class LessonService {
                 name: lesson.name,
                 startDate: lesson.startDate,
                 endDate: lesson.endDate,
-            }
+            },
         });
     }
 }

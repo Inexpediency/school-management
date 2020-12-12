@@ -1,5 +1,12 @@
 import { Logger } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, ResolveField, Parent } from '@nestjs/graphql';
+import {
+    Resolver,
+    Query,
+    Mutation,
+    Args,
+    ResolveField,
+    Parent,
+} from '@nestjs/graphql';
 import { StudentService } from 'src/student/student.service';
 import { Lesson } from './entities/lesson.entity';
 import { AssignStudentsInput } from './inputs/assing-students.input';
@@ -18,8 +25,12 @@ export class LessonResolver {
     ) {}
 
     @Query((returns) => LessonType)
-    lesson(@Args('getLessonInput') getLessonInput: GetLessonInput): Promise<Lesson> {
-        this.logger.log(`Getting lesson with data: ${JSON.stringify(getLessonInput)}`);
+    lesson(
+        @Args('getLessonInput') getLessonInput: GetLessonInput,
+    ): Promise<Lesson> {
+        this.logger.log(
+            `Getting lesson with data: ${JSON.stringify(getLessonInput)}`,
+        );
 
         return this.lessonService.getLesson(getLessonInput);
     }
@@ -35,7 +46,9 @@ export class LessonResolver {
     createLesson(
         @Args('createLessonInput') createLessonInput: CreateLessonInput,
     ): Promise<Lesson> {
-        this.logger.log(`Creation lesson with data: ${JSON.stringify(createLessonInput)}`)
+        this.logger.log(
+            `Creation lesson with data: ${JSON.stringify(createLessonInput)}`,
+        );
 
         return this.lessonService.createLesson(createLessonInput);
     }
@@ -44,7 +57,11 @@ export class LessonResolver {
     assignStudents(
         @Args('assignStudentsInput') assingStudentsInput: AssignStudentsInput,
     ): Promise<Lesson> {
-        this.logger.log(`Assigning students to lesson with data: ${JSON.stringify(assingStudentsInput)}`);
+        this.logger.log(
+            `Assigning students to lesson with data: ${JSON.stringify(
+                assingStudentsInput,
+            )}`,
+        );
 
         return this.lessonService.assignStudents(assingStudentsInput);
     }
